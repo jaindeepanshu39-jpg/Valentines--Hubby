@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>For My Hubby 💖</title>
+  <style>
+    :root {
+      --bg1: #ffdee9;
+      --bg2: #b5fffc;
+      --card: rgba(255, 255, 255, 0.85);
+      --text: #2b2b2b;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--text);
+      background: radial-gradient(circle at top, var(--bg1), var(--bg2));
+      overflow: hidden;
+    }
+    .hearts {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.25;
+      background-image:
+        radial-gradient(circle, rgba(255,0,90,.25) 1px, transparent 2px),
+        radial-gradient(circle, rgba(255,0,90,.18) 1px, transparent 2px);
+      background-size: 60px 60px, 90px 90px;
+      background-position: 0 0, 20px 30px;
+      filter: blur(0.2px);
+      animation: float 12s linear infinite;
+    }
+    @keyframes float {
+      from { transform: translateY(0); }
+      to { transform: translateY(-60px); }
+    }
+    .card {
+      width: min(92vw, 520px);
+      background: var(--card);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      border-radius: 22px;
+      padding: 28px 24px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.12);
+      text-align: center;
+      backdrop-filter: blur(10px);
+      position: relative;
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: 1.7rem;
+    }
+    p {
+      margin: 6px 0 0;
+      opacity: 0.9;
+    }
+    .question {
+      margin-top: 18px;
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+    .btns {
+      margin-top: 18px;
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      position: relative;
+      min-height: 56px;
+    }
+    button {
+      border: 0;
+      padding: 12px 18px;
+      border-radius: 999px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: transform .12s ease, box-shadow .12s ease;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.12);
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    button:active { transform: scale(0.98); }
+    #yesBtn {
+      background: #ff2d75;
+      color: white;
+    }
+    #noBtn {
+      background: #222;
+      color: white;
+      position: absolute;
+      left: 50%;
+      transform: translateX(90px);
+    }
+    .result {
+      margin-top: 18px;
+      display: none;
+    }
+    .love {
+      font-size: 1.5rem;
+      font-weight: 900;
+      margin-bottom: 10px;
+    }
+    .blush {
+      font-size: 4.2rem;
+      line-height: 1;
+      margin: 8px 0 0;
+      filter: drop-shadow(0 10px 16px rgba(0,0,0,0.12));
+    }
+    .tiny {
+      margin-top: 10px;
+      font-size: 0.92rem;
+      opacity: 0.75;
+    }
+  </style>
+</head>
+<body>
+  <div class="hearts"></div>
+
+  <div class="card" id="card">
+    <h1>Hey Hubby 💘</h1>
+    <p>I made something just for you…</p>
+
+    <div class="question">Will you be my Valentine’s, Hubby?</div>
+
+    <div class="btns" id="btnArea">
+      <button id="yesBtn">Yes 😍</button>
+      <button id="noBtn">No 🙈</button>
+    </div>
+
+    <div class="result" id="result">
+      <div class="love">I love you Hubby 😘❤️</div>
+      <div class="blush" aria-label="blushing girl character">😊🌸</div>
+      <div class="tiny">Happy Valentine’s Day 💞</div>
+    </div>
+  </div>
+
+  <script>
+    const noBtn = document.getElementById("noBtn");
+    const yesBtn = document.getElementById("yesBtn");
+    const result = document.getElementById("result");
+    const btnArea = document.getElementById("btnArea");
+    const card = document.getElementById("card");
+
+    function moveNoButton() {
+      const areaRect = btnArea.getBoundingClientRect();
+      const cardRect = card.getBoundingClientRect();
+      const btnRect = noBtn.getBoundingClientRect();
+
+      // Keep the "No" button inside the card area (so it doesn't fly off-screen)
+      const padding = 16;
+
+      const maxX = Math.max(padding, cardRect.width - btnRect.width - padding);
+      const maxY = Math.max(padding, 140); // enough vertical room
+
+      // Random position within card, around the button area
+      const x = Math.floor(Math.random() * maxX);
+      const y = Math.floor(Math.random() * maxY) + 70;
+
+      noBtn.style.left = x + "px";
+      noBtn.style.top = y + "px";
+      noBtn.style.transform = "none";
+    }
+
+    // Desktop: run away from cursor
+    noBtn.addEventListener("mouseenter", moveNoButton);
+
+    // Mobile: run away when finger comes near / taps
+    noBtn.addEventListener("touchstart", (e) => {
+      e.preventDefault();
+      moveNoButton();
+    }, { passive: false });
+
+    // If they keep trying, it keeps moving
+    noBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      moveNoButton();
+    });
+
+    yesBtn.addEventListener("click", () => {
+      btnArea.style.display = "none";
+      result.style.display = "block";
+      confettiBurst();
+    });
+
+    function confettiBurst(){
+      // Tiny hearts burst (no libraries)
+      for(let i=0;i<24;i++){
+        const s = document.createElement("div");
+        s.textContent = "💖";
+        s.style.position = "fixed";
+        s.style.left = (window.innerWidth/2 + (Math.random()*200-100)) + "px";
+        s.style.top = (window.innerHeight/2 + (Math.random()*80-40)) + "px";
+        s.style.fontSize = (16 + Math.random()*18) + "px";
+        s.style.transition = "transform 900ms ease, opacity 900ms ease";
+        s.style.zIndex = 9999;
+        document.body.appendChild(s);
+        requestAnimationFrame(() => {
+          s.style.transform = `translate(${Math.random()*400-200}px, ${Math.random()*-300-80}px) rotate(${Math.random()*240-120}deg)`;
+          s.style.opacity = "0";
+        });
+        setTimeout(() => s.remove(), 950);
+      }
+    }
+
+    // Start with No button slightly offset and ready
+    moveNoButton();
+  </script>
+</body>
+</html>
